@@ -457,7 +457,11 @@ int main(void) {
 			PORTB &= ~(1<<PORTB1);
 			DDRB &= ~((1 << PINB1) | (1 << PINB2));
 			
-			_delay_ms(1000); //This should force a system reset
+			MCUSR &= ~(1 << WDRF); //Clear the flag
+			WDTCSR |= (1 << WDCE) | (1 << WDE);
+			WDTCSR = (1 << WDE); //System reset mode
+			
+			_delay_ms(17);
 		}
 		RESET_WATCHDOG();
 		#ifdef LAST_DEBUGGING
